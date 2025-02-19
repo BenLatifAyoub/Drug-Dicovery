@@ -28,6 +28,40 @@ class ProDataset(Dataset):
     def get_property_id(self, property):
         return self.property_list.index(property)
     
+def getProteinSeqDict(seqContactPath):
+    """Get dictionary mapping protein names to their sequences."""
+    protein_seq_dict = {}
+    
+    try:
+        with open(seqContactPath, 'r') as f:
+            lines = f.readlines()
+            
+        current_protein = None
+        current_seq = []
+        
+        for line in lines:
+            line = line.strip()
+            if line.startswith('>'):
+                # Save previous protein if exists
+                if current_protein and current_seq:
+                    protein_seq_dict[current_protein] = ''.join(current_seq)
+                
+                # Start new protein
+                current_protein = line[1:].split()[0]  # Get protein name
+                current_seq = []
+            elif line:
+                current_seq.append(line)
+        
+        # Save last protein
+        if current_protein and current_seq:
+            protein_seq_dict[current_protein] = ''.join(current_seq)
+            
+    except Exception as e:
+        print(f"Error reading protein sequences: {e}")
+        return {}
+    
+    return protein_seq_dict
+
 testFoldPath = './data/DUDE/dataPre/DUDE-foldTest3'
 trainFoldPath = './data/DUDE/dataPre/DUDE-foldTrain3'
 contactPath = './data/DUDE/contactMap'
