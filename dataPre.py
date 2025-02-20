@@ -1,6 +1,9 @@
+import torch
 from model import *
 from utils import *
 from torch.utils.data import Dataset, DataLoader
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class ProDataset(Dataset):
     # Initialize your data, download, etc.
@@ -113,7 +116,7 @@ modelArgs['n_classes'] = 1
 print('train args...')
 
 trainArgs = {}
-trainArgs['model'] = DrugVQA(modelArgs,block = ResidualBlock).cuda()
+trainArgs['model'] = DrugVQA(modelArgs, block=ResidualBlock).to(device)
 trainArgs['epochs'] = 30
 trainArgs['lr'] = 0.0007
 trainArgs['train_loader'] = train_loader

@@ -3,6 +3,8 @@ import torch
 from torch.autograd import Variable
 import torch.nn.functional as F
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 def conv3x3(in_channels, out_channels, stride=1):
     return nn.Conv2d(in_channels, out_channels, kernel_size=3,
                      stride=stride, padding=1, bias=False)
@@ -74,8 +76,8 @@ class DrugVQA(torch.nn.Module):
         self.hidden_state = self.init_hidden()
 
     def init_hidden(self):
-        return (Variable(torch.zeros(4,self.batch_size,self.lstm_hid_dim).cuda()),
-                Variable(torch.zeros(4,self.batch_size,self.lstm_hid_dim)).cuda())
+        return (Variable(torch.zeros(4,self.batch_size,self.lstm_hid_dim).to(device)),
+                Variable(torch.zeros(4,self.batch_size,self.lstm_hid_dim).to(device)))
 
     def _make_layer(self, block, out_channels, blocks, in_channels):
         downsample = None

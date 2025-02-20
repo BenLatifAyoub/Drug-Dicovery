@@ -16,3 +16,5 @@ joblib==1.4.2
 setuptools==75.8.0
 wheel==0.42.0
 ninja==1.11.1
+cuda==11.1
+cudnn==8.0.5
